@@ -40,7 +40,7 @@ args = parser.parse_args()
 
 # ──────────────── 2. Carga cfg + datos ──────────────────
 cfg = utils.LoadJson(args.config)
-voxels, layers, energies = [], [], []
+voxels_list, layers_list, energies_list = [], [], []
 
 for fname in cfg["FILES"]:
     v, l, e = utils.DataLoader(
@@ -52,11 +52,13 @@ for fname in cfg["FILES"]:
         use_1D = cfg["DATASET"] == 1,
     )
 
-    voxels.append(v); layers.append(l); energies.append(e)
+    voxels_list.append(v)
+    layers_list.append(l)
+    energies_list.append(e)
 
-voxels  = np.reshape(voxels, cfg["SHAPE"])
-layers  = np.concatenate(layers)
-energies= np.concatenate(energies)
+voxels  = np.concatenate(voxels_list, axis=0).reshape(cfg["SHAPE"])
+layers  = np.concatenate(layers_list, axis=0)
+energies= np.concatenate(energies_list, axis=0)
 
 if cfg["PARTICLE"] == 'pion':
     voxels = utils.ApplyPreprocessing(voxels, f"preprocessing_{cfg['DATASET']}_voxel_pions.json")
