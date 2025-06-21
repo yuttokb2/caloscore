@@ -230,7 +230,7 @@ class CaloScore(keras.Model):
         z = tf.random.normal((tf.shape(layer)), dtype=tf.float32)
         perturbed_x = alpha * layer + z * sigma            
         score = self.model_layer([perturbed_x, random_t, cond])
-        denoise = alpha_reshape * z - sigma * layer
+        denoise = alpha * z - sigma * layer
         losses = tf.square(score - denoise)
         loss_layer = tf.reduce_mean(losses)
 
